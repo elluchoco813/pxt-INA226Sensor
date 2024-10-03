@@ -1,5 +1,5 @@
 {
-    "name": "TestINA226",
+    "name": "pxt-INA226",
     "description": "",
     "dependencies": {
         "core": "*",
