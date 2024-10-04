@@ -7,8 +7,9 @@ const INA226_CURRENT = 0x04
 const INA226_CALIBRATION = 0x05
 const INA226_MASK_ENABLE = 0x06
 const INA226_ALERT_LIMIT = 0x07
-const INA226_MANUFACTURER = 0xFE
-const INA226_DIE_ID = 0xFF
+const INA226_MANUFACTURER = 0xfe
+const INA226_DIE_ID = 0xff
+const address = 0x40
 
 //Mascaras 
 
@@ -16,7 +17,7 @@ namespace groveina226 {
 
 
     export function createINA(): INA226 {
-        let ina = new INA226(0x40);
+        let ina = new INA226();
 
         ina.init();
 
@@ -25,34 +26,41 @@ namespace groveina226 {
     export class INA226 
     {
         // Aquí defines las propiedades y métodos para interactuar con el sensor
-        private address: number;
+        //private address: number;
         private currentLSB: number;
         private shunt: number;
         private maxCurrent: number;
 
-        constructor(address: number) {
-            this.address = address;
+        constructor() {
+            //this.address = 0x40;
             this.currentLSB = 0.0;
             this.shunt = 0.002;
             this.maxCurrent = 20.0;
         }
 
         init(): boolean {
-            // Intentamos realizar alguna operación básica como leer el ID del fabricante
-            let manufacterID = this.readRegister(INA226_MANUFACTURER); // Leer el registro del ID del fabricante
-
-            if (manufacterID == 0x5449) { //0x5449 valor que retorna la identificación del fabricante en la dirección 0xFE
+            //Intentamos realizar alguna operación básica como leer el ID del fabricante
+            let manufacterID = readRegister(INA226_MANUFACTURER); // Leer el registro del ID del fabricante
+            //return true
+            if (manufacterID == 16723) { //16679 valor que retorna la identificación del fabricante en la dirección 0xFE
                 //Si el ID es correcto se retorna un true y la inicialización es exitosa
                 return true;
             } else {
                 //Si no es correcto el ID, se retorna false, indicando que no hay respuesta 
                 return false;
             }
+
+            return false
         }
 
         readRegister(reg: number): number {
-            pins.i2cWriteNumber(this.address, reg, NumberFormat.UInt8BE);//se comunica a la direccion i2c y se especifica que el registro es en formato unsigned 8-bit con codificación BE
-            let buffer = pins.i2cReadBuffer(this.address, 2); //en esta linea lee los datos del dispositivo, el 2 corresponde a los dos bytes que es el tamaño del registro del INA226
+            pins.i2cWriteNumber(address, reg, NumberFormat.UInt8BE);//se comunica a la direccion i2c y se especifica que el registro es en formato unsigned 8-bit con codificación BE
+            
+            //control.waitMicros(100)
+
+            let buffer = pins.i2cReadBuffer(address, 2); //en esta linea lee los datos del dispositivo, el 2 corresponde a los dos bytes que es el tamaño del registro del INA226
+            
+
             return (buffer[0] << 8) | buffer[1]; //retorna el registro, para ello se hace un corrimiento y un OR para leer los 16 bits del registro
         }
 
@@ -67,7 +75,7 @@ namespace groveina226 {
             buffer.setNumber(NumberFormat.UInt16BE, 1, value);
 
             //Se escribe a traves de i2c y la dirección del INA
-            let result = pins.i2cWriteBuffer(this.address, buffer);
+            let result = pins.i2cWriteBuffer(address, buffer, false);
             //Si el resultado es 0 se indica que se escribió correctamente, por ende se retorna un true
             return result == 0;
         }
@@ -118,3 +126,30 @@ namespace groveina226 {
     }
 
 }
+/*
+let ina: groveina226.INA226;
+
+//ina.init()
+
+//let probe = ina.readRegister(0xFE)
+
+basic.forever(() => {
+    /*if (ina.init()){
+        basic.showNumber(10);
+        basic.pause(250);
+    }
+    else{
+        basic.showNumber(11);
+        basic.pause(250);
+    }
+
+    if (probe > 0) {
+        basic.showNumber(probe)
+    }
+    else {
+        basic.showString("Nada")
+    }
+
+
+
+})*/
