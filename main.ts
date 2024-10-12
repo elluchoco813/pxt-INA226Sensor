@@ -24,6 +24,7 @@ namespace groveina226 {
      * Create Grove - INA226
     */
     //% blockId=grove_ina_create block="Create INA226"
+    //% blockSetVariable=ina
 
     export function createINA(): INA226 {
         let ina = new INA226();
