@@ -13,8 +13,17 @@ const address = 0x40
 
 //Mascaras 
 
+/** 
+ * Funciones para operar el modulo
+*/
+//%weight=10 block="INA226 Sensor"
+
 namespace groveina226 {
 
+    /** 
+     * Create Grove - INA226
+    */
+    //% blockId=grove_ina226_create block="Create INA226"
 
     export function createINA(): INA226 {
         let ina = new INA226();
@@ -34,13 +43,20 @@ namespace groveina226 {
         constructor() {
             //this.address = 0x40;
             this.currentLSB = 0.0;
-            this.shunt = 0.002;
-            this.maxCurrent = 20.0;
+            this.shunt = 0.001;
+            this.maxCurrent = 3;
         }
-
+        /**
+         * Init Grove - INA226 Sensor
+         */
+        //% blockId=grove_ina226_init block="%ina226|Init Grove - INA226 Sensor"
+        //% advanced=true
         init(): boolean {
             //Intentamos realizar alguna operación básica como leer el ID del fabricante
-            let manufacterID = readRegister(INA226_MANUFACTURER); // Leer el registro del ID del fabricante
+            if (!this.calibrate()) {
+                return false; // Si la calibración falla
+            }
+            let manufacterID = this.readRegister(INA226_MANUFACTURER); // Leer el registro del ID del fabricante
             //return true
             if (manufacterID == 16723) { //16679 valor que retorna la identificación del fabricante en la dirección 0xFE
                 //Si el ID es correcto se retorna un true y la inicialización es exitosa
@@ -53,12 +69,20 @@ namespace groveina226 {
             return false
         }
 
+        calibrate(): boolean{
+            this.currentLSB = this.maxCurrent / 32768;
+
+            let calibrationValue = Math.floor(0.00512 / (this.currentLSB * this.shunt));
+
+            return this.writeRegister(INA226_CALIBRATION, calibrationValue);
+        }
+
         readRegister(reg: number): number {
-            pins.i2cWriteNumber(address, reg, NumberFormat.UInt8BE);//se comunica a la direccion i2c y se especifica que el registro es en formato unsigned 8-bit con codificación BE
+            pins.i2cWriteNumber(0x40, reg, NumberFormat.UInt8BE);//se comunica a la direccion i2c y se especifica que el registro es en formato unsigned 8-bit con codificación BE
             
             //control.waitMicros(100)
 
-            let buffer = pins.i2cReadBuffer(address, 2); //en esta linea lee los datos del dispositivo, el 2 corresponde a los dos bytes que es el tamaño del registro del INA226
+            let buffer = pins.i2cReadBuffer(0x40, 2); //en esta linea lee los datos del dispositivo, el 2 corresponde a los dos bytes que es el tamaño del registro del INA226
             
 
             return (buffer[0] << 8) | buffer[1]; //retorna el registro, para ello se hace un corrimiento y un OR para leer los 16 bits del registro
@@ -75,7 +99,7 @@ namespace groveina226 {
             buffer.setNumber(NumberFormat.UInt16BE, 1, value);
 
             //Se escribe a traves de i2c y la dirección del INA
-            let result = pins.i2cWriteBuffer(address, buffer, false);
+            let result = pins.i2cWriteBuffer(0x40, buffer, false);
             //Si el resultado es 0 se indica que se escribió correctamente, por ende se retorna un true
             return result == 0;
         }
@@ -108,7 +132,8 @@ namespace groveina226 {
             return this.writeRegister(INA226_CONFIGURATION, config); // Escribir el nuevo valor en el registro
         }
 
-
+        //% block="Medir Voltaje"
+        //% blockSetVariable=voltage
         readvoltage() {
             let rawVoltage = this.readRegister(INA226_BUS_VOLTAGE); // Leer el registro de voltaje
             // Convertir el valor crudo a voltios
@@ -116,6 +141,8 @@ namespace groveina226 {
             return voltage;
         }
 
+        //% block="Medir Corriente"
+        //% blockSetVariable=current
         readCurrent() {
             let rawCurrent = this.readRegister(INA226_CURRENT); // Leer el registro de corriente
             // Convertir el valor crudo a amperios

@@ -1,12 +1,13 @@
-let ina: groveina226.INA226;
+let ina2: groveina226.INA226 = groveina226.createINA();
+
 
 //const address = 0x40
 
-//ina.init()
+//let x = ina2.init()
 
 //let probe2 = ina.readRegister(0xfe)
 
-function readRegister(reg: number): number {
+/*function readRegister(reg: number): number {
     pins.i2cWriteNumber(address, reg, NumberFormat.UInt8BE);//se comunica a la direccion i2c y se especifica que el registro es en formato unsigned 8-bit con codificación BE
 
     //control.waitMicros(100)
@@ -32,17 +33,37 @@ function writeRegister(register: number, value: number): boolean {
     //Si el resultado es 0 se indica que se escribió correctamente, por ende se retorna un true
     return result == 0;
 }
+*/
+let probe = ina2.readRegister(0xfe)
 
-let probe = readRegister(0xfe)
+let x = ina2.init()
+
+ina2.calibrate()
+
+if (x){
+    let calibracion = ina2.calibrate()
+    if (calibracion){
+        basic.showNumber(1)
+    }
+    else{
+        basic.showNumber(2)
+    }
+}
+
+let med = ina2.readvoltage()
+let medCurrent = ina2.readCurrent()
 
 basic.forever(function () {
     //for (let address = 1; address < 127; address++) {
-    basic.showNumber(probe)
+    basic.showNumber(med);
+    basic.pause(2000);
+    basic.showNumber(medCurrent)
     if (probe == 16723){
-        basic.showNumber(20)
+        basic.pause(2000);
+        basic.showString("Si");
     }
     else{
-        basic.showNumber(1)
+        basic.showNumber(1);
     }
     
     //try {
