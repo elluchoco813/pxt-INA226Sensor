@@ -23,7 +23,7 @@ namespace groveina226 {
     /** 
      * Create Grove - INA226
     */
-    //% blockId=grove_ina226_create block="Create INA226"
+    //% blockId=grove_ina_create block="Create INA226"
 
     export function createINA(): INA226 {
         let ina = new INA226();
@@ -49,7 +49,7 @@ namespace groveina226 {
         /**
          * Init Grove - INA226 Sensor
          */
-        //% blockId=grove_ina226_init block="%ina226|Init Grove - INA226 Sensor"
+        //% blockId=grove_ina_init block="%ina|Init Grove - INA226 Sensor"
         //% advanced=true
         init(): boolean {
             //Intentamos realizar alguna operación básica como leer el ID del fabricante
@@ -132,7 +132,7 @@ namespace groveina226 {
             return this.writeRegister(INA226_CONFIGURATION, config); // Escribir el nuevo valor en el registro
         }
 
-        //% block="Medir Voltaje"
+        //% blockID=grove_ina_readvoltage block="Medir Voltaje"
         //% blockSetVariable=voltage
         readvoltage() {
             let rawVoltage = this.readRegister(INA226_BUS_VOLTAGE); // Leer el registro de voltaje
