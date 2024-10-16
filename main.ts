@@ -139,7 +139,7 @@ namespace groveina226 {
             let rawVoltage = this.readRegister(INA226_BUS_VOLTAGE); // Leer el registro de voltaje
             // Convertir el valor crudo a voltios
             let voltage = rawVoltage * this.shunt; // Ajusta esto según la fórmula correcta para el INA226
-            return .voltage();
+            return voltage;
         }
 
         //% block="Medir Corriente"
