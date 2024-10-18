@@ -24,8 +24,6 @@ namespace groveina226 {
      * Create Grove - INA226
     */
     //% blockId=grove_ina_create block="Create INA226"
-    //% blockSetVariable=ina
-
     export function createINA(): INA226 {
         let ina = new INA226();
 
@@ -48,10 +46,9 @@ namespace groveina226 {
             this.maxCurrent = 3;
         }
         /**
-         * Init Grove - INA226 Sensor
+         * Init Grove - INA226
          */
-        //% blockId=grove_ina_init block="%ina|Init Grove - INA226 Sensor"
-        //% advanced=true
+        //% blockId=grove_ina_init block="%ina|Init Grove - INA226"
         init(): boolean {
             //Intentamos realizar alguna operación básica como leer el ID del fabricante
             if (!this.calibrate()) {
@@ -133,18 +130,20 @@ namespace groveina226 {
             return this.writeRegister(INA226_CONFIGURATION, config); // Escribir el nuevo valor en el registro
         }
 
-        //% blockID=grove_ina_readvoltage block="Medir Voltaje"
+        //% blockID=grove_ina_readvoltage block="%ina|Medir Voltaje"
         //% blockSetVariable=voltage
-        readvoltage() {
+        //% blockGap=8
+        readvoltage():number {
             let rawVoltage = this.readRegister(INA226_BUS_VOLTAGE); // Leer el registro de voltaje
             // Convertir el valor crudo a voltios
             let voltage = rawVoltage * this.shunt; // Ajusta esto según la fórmula correcta para el INA226
             return voltage;
         }
 
-        //% block="Medir Corriente"
+        //% blockID=grove_ina_readcurrent block="%ina|Medir Corriente"
         //% blockSetVariable=current
-        readCurrent() {
+        //% blockGap=8
+        readCurrent():number {
             let rawCurrent = this.readRegister(INA226_CURRENT); // Leer el registro de corriente
             // Convertir el valor crudo a amperios
             let current = rawCurrent * this.currentLSB; // Ajusta esto según la relación que tienes para currentLSB
@@ -154,30 +153,3 @@ namespace groveina226 {
     }
 
 }
-/*
-let ina: groveina226.INA226;
-
-//ina.init()
-
-//let probe = ina.readRegister(0xFE)
-
-basic.forever(() => {
-    /*if (ina.init()){
-        basic.showNumber(10);
-        basic.pause(250);
-    }
-    else{
-        basic.showNumber(11);
-        basic.pause(250);
-    }
-
-    if (probe > 0) {
-        basic.showNumber(probe)
-    }
-    else {
-        basic.showString("Nada")
-    }
-
-
-
-})*/
