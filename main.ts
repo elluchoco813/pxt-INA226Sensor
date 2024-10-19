@@ -137,7 +137,7 @@ namespace groveina226 {
             let rawVoltage = this.readRegister(INA226_BUS_VOLTAGE); // Leer el registro de voltaje
             // Convertir el valor crudo a voltios
             let voltage = rawVoltage * this.shunt; // Ajusta esto según la fórmula correcta para el INA226
-            return Math.round((voltage * 10000) / 10000);
+            return Math.round(voltage * 10000) / 10000;
         }
 
         //% blockID=grove_ina_readcurrent block="%ina|Medir Corriente"
@@ -147,7 +147,7 @@ namespace groveina226 {
             let rawCurrent = this.readRegister(INA226_CURRENT); // Leer el registro de corriente
             // Convertir el valor crudo a amperios
             let current = rawCurrent * this.currentLSB; // Ajusta esto según la relación que tienes para currentLSB
-            return Math.round((current*10000) / 10000);
+            return Math.round(current*10000) / 10000;
         }
 
     }
