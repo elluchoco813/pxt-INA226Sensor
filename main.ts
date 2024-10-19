@@ -43,7 +43,7 @@ namespace groveina226 {
             //this.address = 0x40;
             this.currentLSB = 0.0;
             this.shunt = 0.001;
-            this.maxCurrent = 3;
+            this.maxCurrent = 5;
         }
         /**
          * Init Grove - INA226
