@@ -54,6 +54,11 @@ namespace groveina226 {
             if (!this.calibrate()) {
                 return false; // Si la calibración falla
             }
+
+            if (!this.setModeShuntBusContinuous()){
+                return false;
+            }
+
             let manufacterID = this.readRegister(INA226_MANUFACTURER); // Leer el registro del ID del fabricante
             //return true
             if (manufacterID == 16723) { //16679 valor que retorna la identificación del fabricante en la dirección 0xFE
@@ -136,7 +141,7 @@ namespace groveina226 {
         readvoltage():number {
             let rawVoltage = this.readRegister(INA226_BUS_VOLTAGE); // Leer el registro de voltaje
             // Convertir el valor crudo a voltios
-            let voltage = rawVoltage * this.shunt; // Ajusta esto según la fórmula correcta para el INA226
+            let voltage = rawVoltage * 0.00125; // Ajusta esto según la fórmula correcta para el INA226
             return Math.round(voltage * 10000) / 10000;
         }
 
