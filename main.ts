@@ -135,6 +135,17 @@ namespace groveina226 {
             return this.writeRegister(INA226_CONFIGURATION, config); // Escribir el nuevo valor en el registro
         }
 
+        //% blockID=grove_ina_readShuntVoltage block="%ina|Medir Voltaje Shunt"
+        //% blockSetVariable=voltajeShunt
+        //% blockGap=8
+        readShuntVoltage():number {
+            let shuntVoltage = INA226_SHUNT_VOLTAGE
+
+            let voltajeShunt = shuntVoltage * 0.00001
+
+            return Math.round(voltajeShunt * 10000) / 10000;
+        }
+
         //% blockID=grove_ina_readvoltage block="%ina|Medir Voltaje"
         //% blockSetVariable=voltage
         //% blockGap=8
