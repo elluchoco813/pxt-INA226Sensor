@@ -138,12 +138,10 @@ namespace groveina226 {
         //% blockID=grove_ina_readShuntVoltage block="%ina|Medir Voltaje Shunt"
         //% blockSetVariable=voltajeShunt
         //% blockGap=8
-        readShuntVoltage():number {
-            let shuntVoltage = INA226_SHUNT_VOLTAGE
-
-            let voltajeShunt = shuntVoltage * 0.00001
-
-            return Math.round(voltajeShunt * 10000) / 10000;
+        readShuntVoltage(): number {
+            let rawShuntVoltage = this.readRegister(INA226_SHUNT_VOLTAGE); // Leer el registro de voltaje del shunt
+            let voltageShunt = rawShuntVoltage * 0.0000025; // 2.5 µV por bit (específico del INA226)
+            return Math.round(voltageShunt * 10000) / 10000; // Redondear a 4 decimales
         }
 
         //% blockID=grove_ina_readvoltage block="%ina|Medir Voltaje"
