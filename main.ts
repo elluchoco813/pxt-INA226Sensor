@@ -42,7 +42,7 @@ namespace groveina226 {
         constructor() {
             //this.address = 0x40;
             this.currentLSB = 0.0;
-            this.shunt = 0.001;
+            this.shunt = 0.1;
             this.maxCurrent = 5;
         }
         /**
