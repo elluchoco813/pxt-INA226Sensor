@@ -43,7 +43,7 @@ namespace groveina226 {
             //this.address = 0x40;
             this.currentLSB = 0.0;
             this.shunt = 0.1;
-            this.maxCurrent = 5;
+            this.maxCurrent = 1;
         }
         /**
          * Init Grove - INA226
@@ -141,7 +141,7 @@ namespace groveina226 {
         readShuntVoltage(): number {
             let rawShuntVoltage = this.readRegister(INA226_SHUNT_VOLTAGE); // Leer el registro de voltaje del shunt
             let voltageShunt = rawShuntVoltage * 0.0000025; // 2.5 µV por bit (específico del INA226)
-            return Math.round(voltageShunt); // Redondear a 4 decimales
+            return voltageShunt; // Redondear a 4 decimales
         }
 
         //% blockID=grove_ina_readvoltage block="%ina|Medir Voltaje"
